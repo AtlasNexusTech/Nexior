@@ -247,8 +247,63 @@
     <link rel="modulepreload" crossorigin href="/atlas-studio/assets/vendor-dayjs-v0j1UNZp.js">
     <link rel="modulepreload" crossorigin href="/atlas-studio/assets/vendor-vue-router-CBGKudGF.js">
     <link rel="stylesheet" crossorigin href="/atlas-studio/assets/index-CHWw2lZ5.css">
+    <link rel="stylesheet" href="/css/atlas-header.css?v=1">
   </head>
-  <body>
+  <body class="atlas-unified-header">
+    <header class="atlas-site-header" data-atlas-site-header>
+      <nav class="atlas-site-nav" aria-label="Atlas Nexus home">
+        <a href="/en/" class="atlas-site-brand" aria-label="Atlas Nexus home">
+          <img src="/atlas-logo.png?v=20260527" alt="" class="atlas-site-brand-logo" width="48" height="48">
+          <span class="atlas-site-brand-name">Atlas Nexus</span>
+        </a>
+        <ul class="atlas-site-links">
+          <li><a href="/en/#work">Work</a></li>
+          <li><a href="/en/#offers">Offers</a></li>
+          <li><a href="/en/#why">Why</a></li>
+          <li><a href="https://github.com/AtlasNexusTech" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+        <div class="atlas-site-actions">
+          <div class="atlas-site-language" data-active="en" role="group" aria-label="Language selector">
+            <a href="/?lang=fr" data-atlas-lang="fr">FR</a>
+            <a href="/en/" data-atlas-lang="en">EN</a>
+          </div>
+          <button id="atlas-theme-toggle" class="atlas-theme-toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false">
+            <svg class="atlas-theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l1.41 1.41"/></svg>
+            <svg class="atlas-theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>
+          </button>
+          <a class="atlas-site-contact" href="/en/#contact">Contact</a>
+        </div>
+      </nav>
+    </header>
+    <script data-atlas-header-controller>
+      (() => {
+        const root = document.documentElement;
+        const toggle = document.getElementById('atlas-theme-toggle');
+        const safeSet = (key, value) => {
+          try { localStorage.setItem(key, value); } catch (_) { /* persistence unavailable */ }
+        };
+        const syncToggle = () => {
+          if (!toggle) return;
+          const dark = root.classList.contains('dark');
+          toggle.setAttribute('aria-pressed', String(dark));
+          toggle.setAttribute('aria-label', dark ? 'Use light theme' : 'Use dark theme');
+        };
+        if (toggle) {
+          syncToggle();
+          toggle.addEventListener('click', () => {
+            const theme = root.classList.toggle('dark') ? 'dark' : 'light';
+            root.style.colorScheme = theme;
+            safeSet('theme', theme);
+            safeSet('vueuse-color-scheme', theme);
+            try { document.cookie = `THEME=${theme}; Path=/; Max-Age=31536000; SameSite=Lax`; } catch (_) { /* cookies unavailable */ }
+            syncToggle();
+          });
+        }
+        document.querySelectorAll('[data-atlas-lang]').forEach((link) => {
+          link.addEventListener('click', () => safeSet('atlasnexus.lang', link.dataset.atlasLang));
+        });
+      })();
+    </script>
     <div id="app">
       <div class="boot" aria-label="Loading" role="status">
         <div class="boot__content">
